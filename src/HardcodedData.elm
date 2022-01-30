@@ -114,6 +114,42 @@ callStack =
                             , type_ = "Int"
                             , value = "5"
                             }
+                        , Binding.Collection
+                            { name = "openPaths"
+                            , type_ = "Set (List String)"
+                            , secondaryType = Nothing
+                            , children =
+                                [ Binding.Collection
+                                    { name = "_0"
+                                    , type_ = "List String"
+                                    , secondaryType = Nothing
+                                    , children =
+                                        [ Binding.Single
+                                            { name = "_0"
+                                            , type_ = "String"
+                                            , value = "\"model\""
+                                            }
+                                        ]
+                                    }
+                                , Binding.Collection
+                                    { name = "_1"
+                                    , type_ = "List String"
+                                    , secondaryType = Nothing
+                                    , children =
+                                        [ Binding.Single
+                                            { name = "_0"
+                                            , type_ = "String"
+                                            , value = "\"model\""
+                                            }
+                                        , Binding.Single
+                                            { name = "_1"
+                                            , type_ = "String"
+                                            , value = "\"openPaths\""
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
                         ]
                     }
                 ]

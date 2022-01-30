@@ -65,7 +65,9 @@ view { tree, valueView, openPaths, togglePath } =
                                 [ Attrs.class "flex flex-row hover:bg-amber-50 transition-colors duration-75 cursor-pointer py-1"
                                 , Events.onClick <| togglePath path
                                 ]
-                                [ Html.div [] (List.repeat level spacer)
+                                [ Html.div
+                                    [ Attrs.class "flex flex-row" ]
+                                    (List.repeat level spacer)
                                 , Html.div
                                     [ Attrs.class "text-slate-400 w-6 text-center" ]
                                     [ Html.text arrow ]
@@ -85,7 +87,9 @@ view { tree, valueView, openPaths, togglePath } =
                     else
                         Html.div
                             [ Attrs.class "pl-6 py-1 flex flex-row hover:bg-amber-50 transition-colors duration-75" ]
-                            [ Html.div [] (List.repeat level spacer)
+                            [ Html.div
+                                [ Attrs.class "flex flex-row" ]
+                                (List.repeat level spacer)
                             , valueView node.value
                             ]
 
