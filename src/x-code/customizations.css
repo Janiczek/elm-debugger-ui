@@ -1,0 +1,12 @@
+x-code .hljs-ln-numbers {
+  padding-right: 12px;
+}
+
+x-code pre {
+  display: flex;
+  flex: 1;
+}
+
+x-code pre code.hljs {
+  flex: 1;
+}
