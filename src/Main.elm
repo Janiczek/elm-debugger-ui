@@ -391,7 +391,7 @@ codeView { openFiles } =
                         Html.a
                             [ Attrs.name fragment
                             , Attrs.href <| "#" ++ fragment
-                            , Attrs.class "outline-none text-[#707880] hover:text-[#f0c674]"
+                            , Attrs.class "outline-none text-[#707880] hover:text-[#f0c674] active:font-bold"
                             , Attrs.class "code-line-number"
                             ]
                             [ Html.text numString ]
