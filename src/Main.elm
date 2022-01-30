@@ -376,7 +376,7 @@ codeView { openFiles } =
         ]
         [ Html.div
             [ Attrs.class "code-line-numbers"
-            , Attrs.class "flex flex-col text-right font-mono text-[#707880] hover:text-[#f0c674] h-max"
+            , Attrs.class "flex flex-col text-right font-mono h-max"
             ]
             (List.range 1 lineCount
                 |> List.map
@@ -391,7 +391,7 @@ codeView { openFiles } =
                         Html.a
                             [ Attrs.name fragment
                             , Attrs.href <| "#" ++ fragment
-                            , Attrs.class "outline-none"
+                            , Attrs.class "outline-none text-[#707880] hover:text-[#f0c674]"
                             , Attrs.class "code-line-number"
                             ]
                             [ Html.text numString ]
