@@ -16,6 +16,7 @@ import Html.Attributes as Attrs
 import Html.Events as Events
 import List.Zipper as Zipper exposing (Zipper)
 import Set exposing (Set)
+import Set.Any exposing (AnySet)
 import Set.Extra
 import Task
 import UX.Panel
@@ -33,7 +34,27 @@ type alias Model =
     , callStack : Zipper StackFrame
     , breakpoints : List Breakpoint
     , openBindingPaths : Dict StackFrame.ComparableId (Set (List String))
+    , openSections : AnySet String Section
     }
+
+
+type Section
+    = CallStack
+    | Bindings
+    | Breakpoints
+
+
+sectionToString : Section -> String
+sectionToString section =
+    case section of
+        CallStack ->
+            "CallStack"
+
+        Bindings ->
+            "Bindings"
+
+        Breakpoints ->
+            "Breakpoints"
 
 
 type Msg
@@ -63,6 +84,7 @@ init () =
       , callStack = HardcodedData.callStack
       , breakpoints = HardcodedData.breakpoints
       , openBindingPaths = Dict.empty
+      , openSections = Set.Any.empty sectionToString
       }
     , Cmd.none
     )
@@ -184,7 +206,7 @@ view model =
                                 (\( label, tooltip, msg ) ->
                                     Html.button
                                         [ Events.onClick msg
-                                        , Attrs.class "px-1 ring-1"
+                                        , Attrs.class "px-1 ring-1 ring-slate-400 text-slate-400 hover:ring-slate-600 hover:text-slate-600 transition-colors duration-75"
                                         , Attrs.title tooltip
                                         ]
                                         [ Html.text label ]
