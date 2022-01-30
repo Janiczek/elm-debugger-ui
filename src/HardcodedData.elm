@@ -32,7 +32,8 @@ openFiles =
 callStack : Zipper StackFrame
 callStack =
     Zipper.fromCons
-        { functionName = "anonymous function (argument `pred` of Zipper.Extra.filter)"
+        { functionName = "anonymous function"
+        , extraInfo = Just "argument `pred` of Zipper.Extra.filter"
         , fileName = FileName.fromString "Main.elm"
         , filePath = FilePath.fromString "src/Main.elm"
         , fileLine = 83
@@ -74,6 +75,7 @@ callStack =
                 |> Dict.fromList
         }
         [ { functionName = "Zipper.Extra.filter"
+          , extraInfo = Nothing
           , fileName = FileName.fromString "Extra.elm"
           , filePath = FilePath.fromString "src/Zipper/Extra.elm"
           , fileLine = 14
@@ -94,6 +96,7 @@ callStack =
                     |> Dict.fromList
           }
         , { functionName = "Main.update"
+          , extraInfo = Nothing
           , fileName = FileName.fromString "Main.elm"
           , filePath = FilePath.fromString "src/Main.elm"
           , fileLine = 83

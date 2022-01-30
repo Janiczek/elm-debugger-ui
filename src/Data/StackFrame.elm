@@ -8,6 +8,7 @@ import Dict exposing (Dict)
 
 type alias StackFrame =
     { functionName : String
+    , extraInfo : Maybe String
     , fileName : FileName
     , filePath : FilePath
     , fileLine : Int

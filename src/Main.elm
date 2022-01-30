@@ -43,6 +43,8 @@ type Msg
     | ToggleBindingPath StackFrame.ComparableId (List String)
     | GoToBreakpoint FilePath Int
     | FocusAttempted
+    | Step
+    | Run
 
 
 main : Program Flags Model Msg
@@ -119,6 +121,14 @@ update msg model =
         FocusAttempted ->
             ( model, Cmd.none )
 
+        Step ->
+            -- TODO
+            ( model, Cmd.none )
+
+        Run ->
+            -- TODO
+            ( model, Cmd.none )
+
 
 goToFile : FilePath -> Model -> Model
 goToFile filePath model =
@@ -165,7 +175,22 @@ view model =
                 [ Attrs.class "w-64 flex flex-col bg-slate-100" ]
                 [ Html.div
                     [ Attrs.class "flex flex-1 divide-y divide-slate-300 flex-col items-stretch" ]
-                    [ UX.Panel.view
+                    [ Html.div
+                        [ Attrs.class "flex flex-row gap-2 px-2 py-1 text-slate-400 bg-slate-200 text-sm font-bold uppercase tracking-widest select-none border-b border-slate-300" ]
+                        ([ ( "→", "Step", Step )
+                         , ( "▶", "Run", Run )
+                         ]
+                            |> List.map
+                                (\( label, tooltip, msg ) ->
+                                    Html.button
+                                        [ Events.onClick msg
+                                        , Attrs.class "px-1 ring-1"
+                                        , Attrs.title tooltip
+                                        ]
+                                        [ Html.text label ]
+                                )
+                        )
+                    , UX.Panel.view
                         { title = "Call stack" }
                         [ callStackView model ]
                     , UX.Panel.view
@@ -205,6 +230,14 @@ callStackView { callStack } =
                             , Attrs.class "overflow-x-hidden whitespace-nowrap text-ellipsis"
                             ]
                             [ Html.text frame.functionName ]
+                        , frame.extraInfo
+                            |> Maybe.map
+                                (\extraInfo ->
+                                    Html.div
+                                        [ Attrs.class "text-slate-500 text-xs" ]
+                                        [ Html.text extraInfo ]
+                                )
+                            |> Maybe.withDefault (Html.text "")
                         , Html.div
                             [ Attrs.class "text-slate-500 text-xs" ]
                             [ Html.text <|
