@@ -38,25 +38,6 @@ type alias Model =
     }
 
 
-type Section
-    = CallStack
-    | Bindings
-    | Breakpoints
-
-
-sectionToString : Section -> String
-sectionToString section =
-    case section of
-        CallStack ->
-            "CallStack"
-
-        Bindings ->
-            "Bindings"
-
-        Breakpoints ->
-            "Breakpoints"
-
-
 type Msg
     = GoToTab FilePath
     | CloseTab FilePath
@@ -66,6 +47,7 @@ type Msg
     | FocusAttempted
     | Step
     | Run
+    | ToggleSection Section
 
 
 main : Program Flags Model Msg
@@ -84,10 +66,34 @@ init () =
       , callStack = HardcodedData.callStack
       , breakpoints = HardcodedData.breakpoints
       , openBindingPaths = Dict.empty
-      , openSections = Set.Any.empty sectionToString
+      , openSections =
+            Set.Any.fromList sectionToString
+                [ CallStack
+                , Bindings
+                , Breakpoints
+                ]
       }
     , Cmd.none
     )
+
+
+type Section
+    = CallStack
+    | Bindings
+    | Breakpoints
+
+
+sectionToString : Section -> String
+sectionToString section =
+    case section of
+        CallStack ->
+            "CallStack"
+
+        Bindings ->
+            "Bindings"
+
+        Breakpoints ->
+            "Breakpoints"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -151,6 +157,15 @@ update msg model =
             -- TODO
             ( model, Cmd.none )
 
+        ToggleSection section ->
+            ( { model
+                | openSections =
+                    model.openSections
+                        |> Set.Any.toggle section
+              }
+            , Cmd.none
+            )
+
 
 goToFile : FilePath -> Model -> Model
 goToFile filePath model =
@@ -213,13 +228,22 @@ view model =
                                 )
                         )
                     , UX.Panel.view
-                        { title = "Call stack" }
+                        { title = "Call stack"
+                        , isExpanded = Set.Any.member CallStack model.openSections
+                        , toggle = ToggleSection CallStack
+                        }
                         [ callStackView model ]
                     , UX.Panel.view
-                        { title = "Bindings" }
+                        { title = "Bindings"
+                        , isExpanded = Set.Any.member Bindings model.openSections
+                        , toggle = ToggleSection Bindings
+                        }
                         [ bindingsView model ]
                     , UX.Panel.view
-                        { title = "Breakpoints" }
+                        { title = "Breakpoints"
+                        , isExpanded = Set.Any.member Breakpoints model.openSections
+                        , toggle = ToggleSection Breakpoints
+                        }
                         [ breakpointsView model ]
                     ]
                 ]
