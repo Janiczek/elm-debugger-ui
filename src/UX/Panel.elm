@@ -2,7 +2,6 @@ module UX.Panel exposing (view)
 
 import Html exposing (Html)
 import Html.Attributes as Attrs
-import Html.Events as Events
 
 
 view : { title : String } -> List (Html msg) -> Html msg

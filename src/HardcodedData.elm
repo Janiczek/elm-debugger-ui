@@ -3,10 +3,10 @@ module HardcodedData exposing (breakpoints, callStack, openFiles)
 import Data.Binding as Binding
 import Data.Breakpoint exposing (Breakpoint)
 import Data.File exposing (File)
-import Data.FileName as FileName exposing (FileName)
-import Data.FilePath as FilePath exposing (FilePath)
+import Data.FileName as FileName
+import Data.FilePath as FilePath
 import Data.StackFrame exposing (StackFrame)
-import Dict exposing (Dict)
+import Dict
 import List.Zipper as Zipper exposing (Zipper)
 
 

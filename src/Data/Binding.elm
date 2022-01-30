@@ -6,8 +6,6 @@ module Data.Binding exposing
     , value
     )
 
-import Dict exposing (Dict)
-
 
 type Binding
     = Single

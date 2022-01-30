@@ -4,7 +4,7 @@ import Browser
 import Data.Binding as Binding exposing (Binding)
 import Data.Breakpoint exposing (Breakpoint)
 import Data.File exposing (File)
-import Data.FileName as FileName exposing (FileName)
+import Data.FileName as FileName
 import Data.FilePath as FilePath exposing (FilePath)
 import Data.StackFrame as StackFrame exposing (StackFrame)
 import Dict exposing (Dict)
@@ -34,8 +34,7 @@ type alias Model =
 
 
 type Msg
-    = NoOp
-    | GoToTab FilePath
+    = GoToTab FilePath
     | CloseTab FilePath
     | GoToFrame StackFrame.Id
     | ToggleBindingPath StackFrame.ComparableId (List String)
@@ -65,9 +64,6 @@ init () =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NoOp ->
-            ( model, Cmd.none )
-
         GoToTab filePath ->
             ( { model
                 | openFiles =
@@ -228,7 +224,7 @@ bindingsView { callStack, openBindingPaths } =
                         newTodos : List ( UX.TreeBrowser.Path, Binding )
                         newTodos =
                             case binding of
-                                Binding.Single r ->
+                                Binding.Single _ ->
                                     []
 
                                 Binding.Collection r ->

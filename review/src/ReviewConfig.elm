@@ -2,7 +2,6 @@ module ReviewConfig exposing (config)
 
 import AllTextareasWithGrammarlyDisabled
 import ConsistentImports
-import NoEmptyHtmlText
 import NoExposingEverything
 import NoImportingEverything
 import NoLeftPizza
@@ -30,7 +29,6 @@ config =
     , AllTextareasWithGrammarlyDisabled.rule
     , ConsistentImports.rule
     , NoLeftPizza.rule NoLeftPizza.Redundant
-    , NoEmptyHtmlText.rule
     , Simplify.rule Simplify.defaults
     , NoExposingEverything.rule
     , NoImportingEverything.rule []

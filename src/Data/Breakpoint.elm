@@ -1,7 +1,7 @@
 module Data.Breakpoint exposing (Breakpoint)
 
-import Data.FileName as FileName exposing (FileName)
-import Data.FilePath as FilePath exposing (FilePath)
+import Data.FileName exposing (FileName)
+import Data.FilePath exposing (FilePath)
 
 
 type alias Breakpoint =

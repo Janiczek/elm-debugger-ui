@@ -1,7 +1,7 @@
 module Data.StackFrame exposing (ComparableId, Id, StackFrame, comparableId, id)
 
 import Data.Binding exposing (Binding)
-import Data.FileName as FileName exposing (FileName)
+import Data.FileName exposing (FileName)
 import Data.FilePath as FilePath exposing (FilePath)
 import Dict exposing (Dict)
 
