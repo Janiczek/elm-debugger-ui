@@ -129,8 +129,8 @@ breakpoints =
       , filePath = FilePath.fromString "src/Main.elm"
       , fileLine = 78
       }
-    , { fileName = FileName.fromString "FilePath.elm"
-      , filePath = FilePath.fromString "src/Data/FilePath.elm"
+    , { fileName = FileName.fromString "FileName.elm"
+      , filePath = FilePath.fromString "src/Data/FileName.elm"
       , fileLine = 10
       }
     ]

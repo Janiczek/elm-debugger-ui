@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import Browser.Dom
 import Data.Binding as Binding exposing (Binding)
 import Data.Breakpoint exposing (Breakpoint)
 import Data.File exposing (File)
@@ -16,6 +17,7 @@ import Html.Events as Events
 import List.Zipper as Zipper exposing (Zipper)
 import Set exposing (Set)
 import Set.Extra
+import Task
 import UX.Panel
 import UX.TabList
 import UX.TreeBrowser
@@ -39,6 +41,8 @@ type Msg
     | CloseTab FilePath
     | GoToFrame StackFrame.Id
     | ToggleBindingPath StackFrame.ComparableId (List String)
+    | GoToBreakpoint FilePath Int
+    | FocusAttempted
 
 
 main : Program Flags Model Msg
@@ -66,12 +70,8 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GoToTab filePath ->
-            ( { model
-                | openFiles =
-                    model.openFiles
-                        |> Zipper.findFirst (\file -> file.path == filePath)
-                        |> Maybe.withDefault model.openFiles
-              }
+            ( model
+                |> goToFile filePath
             , Cmd.none
             )
 
@@ -97,7 +97,8 @@ update msg model =
                             )
                         |> Maybe.withDefault model.callStack
               }
-            , Cmd.none
+                |> goToFile filePath
+            , goToLine fileLine
             )
 
         ToggleBindingPath frameId path ->
@@ -108,6 +109,37 @@ update msg model =
               }
             , Cmd.none
             )
+
+        GoToBreakpoint filePath line ->
+            ( model
+                |> goToFile filePath
+            , goToLine line
+            )
+
+        FocusAttempted ->
+            ( model, Cmd.none )
+
+
+goToFile : FilePath -> Model -> Model
+goToFile filePath model =
+    { model
+        | openFiles =
+            model.openFiles
+                |> Zipper.findFirst (\file -> file.path == filePath)
+                |> Maybe.withDefault model.openFiles
+    }
+
+
+lineId : Int -> String
+lineId line =
+    "line-" ++ String.fromInt line
+
+
+goToLine : Int -> Cmd Msg
+goToLine line =
+    lineId line
+        |> Browser.Dom.focus
+        |> Task.attempt (\_ -> FocusAttempted)
 
 
 subscriptions : Model -> Sub Msg
@@ -308,7 +340,9 @@ breakpointsView { breakpoints } =
         (List.map
             (\breakpoint ->
                 Html.div
-                    [ Attrs.class "py-1 px-2 flex flex-col gap-1 hover:bg-amber-50 transition-colors duration-75" ]
+                    [ Attrs.class "py-1 px-2 flex flex-col gap-1 hover:bg-amber-50 transition-colors duration-75"
+                    , Events.onClick <| GoToBreakpoint breakpoint.filePath breakpoint.fileLine
+                    ]
                     [ Html.div [ Attrs.class "text-sm" ]
                         [ Html.span
                             [ Attrs.class "text-slate-800" ]
@@ -382,19 +416,16 @@ codeView { openFiles } =
                 |> List.map
                     (\lineNumber ->
                         let
-                            numString =
-                                String.fromInt lineNumber
-
                             fragment =
-                                "line-" ++ numString
+                                lineId lineNumber
                         in
                         Html.a
-                            [ Attrs.name fragment
+                            [ Attrs.id fragment
                             , Attrs.href <| "#" ++ fragment
                             , Attrs.class "outline-none text-[#707880] hover:text-[#f0c674] active:font-bold"
                             , Attrs.class "code-line-number"
                             ]
-                            [ Html.text numString ]
+                            [ Html.text <| String.fromInt lineNumber ]
                     )
             )
         , Html.node "x-code"
