@@ -505,10 +505,6 @@ codeView { openFiles } =
         lineCount : Int
         lineCount =
             List.length <| String.lines <| FileContents.unwrap file.contents
-
-        lineCountChars : Int
-        lineCountChars =
-            String.length <| String.fromInt lineCount
     in
     Html.div
         [ Attrs.class "flex flex-1 flex-row overflow-y-auto overflow-x-auto bg-[#1d1f21]" ]
