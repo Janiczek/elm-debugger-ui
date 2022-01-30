@@ -7,7 +7,7 @@ import Data.FileContents as FileContents exposing (FileContents)
 import Data.FileName as FileName
 import Data.FilePath as FilePath
 import Data.StackFrame exposing (StackFrame)
-import Dict exposing (Dict)
+import Dict
 import List.Zipper as Zipper exposing (Zipper)
 
 

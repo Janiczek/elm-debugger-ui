@@ -5,7 +5,7 @@ import Browser.Dom
 import Data.Binding as Binding exposing (Binding)
 import Data.Breakpoint exposing (Breakpoint)
 import Data.File exposing (File)
-import Data.FileContents as FileContents exposing (FileContents)
+import Data.FileContents as FileContents
 import Data.FileName as FileName
 import Data.FilePath as FilePath exposing (FilePath)
 import Data.StackFrame as StackFrame exposing (StackFrame)
