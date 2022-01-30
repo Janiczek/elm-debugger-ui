@@ -1,4 +1,4 @@
-module Data.FileContents exposing (FileContents, fromString, unwrap)
+module Data.FileContents exposing (FileContents, fromString, line, unwrap)
 
 
 type FileContents
@@ -13,3 +13,11 @@ fromString string =
 unwrap : FileContents -> String
 unwrap (FileContents string) =
     string
+
+
+line : Int -> FileContents -> Maybe String
+line lineNumber (FileContents string) =
+    string
+        |> String.lines
+        |> List.drop (lineNumber - 1)
+        |> List.head

@@ -157,7 +157,7 @@ view model =
         , Html.div
             [ Attrs.class "flex flex-1 flex-row divide-x divide-slate-300 items-stretch overflow-hidden" ]
             [ Html.div
-                [ Attrs.class "flex-1 flex flex-col" ]
+                [ Attrs.class "flex-1 flex flex-col overflow-x-hidden" ]
                 [ tabListView model
                 , codeView model
                 ]
@@ -334,31 +334,51 @@ bindingsView { callStack, openBindingPaths } =
         }
 
 
-breakpointsView : { r | breakpoints : List Breakpoint } -> Html Msg
-breakpointsView { breakpoints } =
-    Html.div [ Attrs.class "flex flex-col divide-y" ]
-        (List.map
-            (\breakpoint ->
-                Html.div
-                    [ Attrs.class "py-1 px-2 flex flex-col gap-1 hover:bg-amber-50 transition-colors duration-75"
-                    , Events.onClick <| GoToBreakpoint breakpoint.filePath breakpoint.fileLine
-                    ]
-                    [ Html.div [ Attrs.class "text-sm" ]
-                        [ Html.span
-                            [ Attrs.class "text-slate-800" ]
-                            [ Html.text <| FileName.unwrap breakpoint.fileName ]
-                        , Html.span
-                            [ Attrs.class "text-slate-500" ]
-                            [ Html.text <| ":" ++ String.fromInt breakpoint.fileLine ]
-                        ]
-                    , Html.div [ Attrs.class "text-xs text-slate-500 font-mono overflow-x-hidden whitespace-nowrap text-ellipsis" ]
-                        [ Html.text "let bogusCode = 42 in String.fromInt bogusCode" ]
-                    ]
-            )
-            breakpoints
+breakpointsView :
+    { r
+        | breakpoints : List Breakpoint
+        , openFiles : Zipper File
+    }
+    -> Html Msg
+breakpointsView ({ breakpoints } as model) =
+    Html.div
+        [ Attrs.class "flex flex-col divide-y" ]
+        (List.map (breakpointView model) breakpoints
             ++ -- to give the bottommost item a bottom border:
                [ Html.div [] [] ]
         )
+
+
+breakpointView : { r | openFiles : Zipper File } -> Breakpoint -> Html Msg
+breakpointView { openFiles } breakpoint =
+    let
+        line : Maybe String
+        line =
+            openFiles
+                |> Zipper.findFirst (\file -> file.path == breakpoint.filePath)
+                |> Maybe.andThen
+                    (\zipper ->
+                        zipper
+                            |> Zipper.current
+                            |> .contents
+                            |> FileContents.line breakpoint.fileLine
+                    )
+    in
+    Html.div
+        [ Attrs.class "py-1 px-2 flex flex-col gap-1 hover:bg-amber-50 transition-colors duration-75"
+        , Events.onClick <| GoToBreakpoint breakpoint.filePath breakpoint.fileLine
+        ]
+        [ Html.div [ Attrs.class "text-sm" ]
+            [ Html.span
+                [ Attrs.class "text-slate-800" ]
+                [ Html.text <| FileName.unwrap breakpoint.fileName ]
+            , Html.span
+                [ Attrs.class "text-slate-500" ]
+                [ Html.text <| ":" ++ String.fromInt breakpoint.fileLine ]
+            ]
+        , Html.div [ Attrs.class "text-xs text-slate-500 font-mono overflow-x-hidden whitespace-nowrap text-ellipsis" ]
+            [ Html.text <| "let bogusCode = 42 in String.fromInt bogusCode" ]
+        ]
 
 
 tabListView : { r | openFiles : Zipper File } -> Html Msg
@@ -404,13 +424,10 @@ codeView { openFiles } =
             String.length <| String.fromInt lineCount
     in
     Html.div
-        [ Attrs.class "flex flex-1 flex-row overflow-y-auto"
-        , Attrs.class "code-view"
-        , Attrs.attribute "style" <| "--line-count-chars: " ++ String.fromInt lineCountChars
-        ]
+        [ Attrs.class "flex flex-1 flex-row overflow-y-auto overflow-x-auto bg-[#1d1f21]" ]
         [ Html.div
             [ Attrs.class "code-line-numbers"
-            , Attrs.class "flex flex-col text-right font-mono h-max"
+            , Attrs.class "flex flex-col text-right font-mono h-max bg-[#282a2e]"
             ]
             (List.range 1 lineCount
                 |> List.map

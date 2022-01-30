@@ -1,13 +1,3 @@
-.code-view {
-  background: linear-gradient(
-    to right,
-    #282a2e 0%,
-    #282a2e calc(var(--line-count-chars) * 1ch + 13px),
-    #1d1f21 calc((var(--line-count-chars) + 0.000001) * 1ch + 13px),
-    #1d1f21 100%
-  );
-}
-
 .code-line-number {
   padding: 0 8px;
 }
