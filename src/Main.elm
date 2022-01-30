@@ -376,8 +376,16 @@ breakpointView { openFiles } breakpoint =
                 [ Attrs.class "text-slate-500" ]
                 [ Html.text <| ":" ++ String.fromInt breakpoint.fileLine ]
             ]
-        , Html.div [ Attrs.class "text-xs text-slate-500 font-mono overflow-x-hidden whitespace-nowrap text-ellipsis" ]
-            [ Html.text <| "let bogusCode = 42 in String.fromInt bogusCode" ]
+        , line
+            |> Maybe.map
+                (\line_ ->
+                    Html.div
+                        [ Attrs.class "text-xs text-slate-500 font-mono overflow-x-hidden whitespace-nowrap text-ellipsis"
+                        , Attrs.title <| String.trim line_
+                        ]
+                        [ Html.text line_ ]
+                )
+            |> Maybe.withDefault (Html.text "")
         ]
 
 

@@ -127,7 +127,7 @@ breakpoints : List Breakpoint
 breakpoints =
     [ { fileName = FileName.fromString "Main.elm"
       , filePath = FilePath.fromString "src/Main.elm"
-      , fileLine = 78
+      , fileLine = 28
       }
     , { fileName = FileName.fromString "FileName.elm"
       , filePath = FilePath.fromString "src/Data/FileName.elm"
@@ -157,7 +157,20 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GoToTab filePath ->
-            (1, Cmd.none)
+            ( model
+                |> goToFile filePath
+            , Cmd.none
+            )
+
+        CloseTab filePath ->
+            ( { model
+                | openFiles =
+                    model.openFiles
+                        |> Zipper.Extra.filter (\\file -> file.path /= filePath)
+                        |> Maybe.withDefault model.openFiles
+              }
+            , Cmd.none
+            )
 """
         |> String.dropLeft 1
         |> FileContents.fromString
