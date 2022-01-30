@@ -360,12 +360,46 @@ codeView { openFiles } =
         file : File
         file =
             Zipper.current openFiles
+
+        lineCount : Int
+        lineCount =
+            List.length <| String.lines <| FileContents.unwrap file.contents
+
+        lineCountChars : Int
+        lineCountChars =
+            String.length <| String.fromInt lineCount
     in
     Html.div
-        [ Attrs.class "flex flex-1 overflow-hidden" ]
-        [ Html.node "x-code"
+        [ Attrs.class "flex flex-1 flex-row overflow-y-auto"
+        , Attrs.class "code-view"
+        , Attrs.attribute "style" <| "--line-count-chars: " ++ String.fromInt lineCountChars
+        ]
+        [ Html.div
+            [ Attrs.class "code-line-numbers"
+            , Attrs.class "flex flex-col text-right font-mono text-[#707880] hover:text-[#f0c674] h-max"
+            ]
+            (List.range 1 lineCount
+                |> List.map
+                    (\lineNumber ->
+                        let
+                            numString =
+                                String.fromInt lineNumber
+
+                            fragment =
+                                "line-" ++ numString
+                        in
+                        Html.a
+                            [ Attrs.name fragment
+                            , Attrs.href <| "#" ++ fragment
+                            , Attrs.class "outline-none"
+                            , Attrs.class "code-line-number"
+                            ]
+                            [ Html.text numString ]
+                    )
+            )
+        , Html.node "x-code"
             [ Attrs.attribute "code" <| FileContents.unwrap file.contents
-            , Attrs.class "flex flex-1"
+            , Attrs.class "flex flex-1 h-max"
             ]
             []
         ]

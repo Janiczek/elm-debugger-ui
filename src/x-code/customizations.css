@@ -1,3 +1,21 @@
+.code-view {
+  background: linear-gradient(
+    to right,
+    #282a2e 0%,
+    #282a2e calc(var(--line-count-chars) * 1ch + 13px),
+    #1d1f21 calc((var(--line-count-chars) + 0.000001) * 1ch + 13px),
+    #1d1f21 100%
+  );
+}
+
+.code-line-number {
+  padding: 0 8px;
+}
+
+.code-line-number:hover {
+  background-color: #1d1f21; 
+}
+
 x-code pre {
   display: flex;
   flex: 1;
@@ -5,6 +23,12 @@ x-code pre {
 
 x-code pre code.hljs {
   flex: 1;
+  padding: 0;
   padding-left: 12px;
+}
+
+.code-line-numbers,
+x-code pre code.hljs {
   font-size: 14px;
+  padding-top: 8px;
 }
