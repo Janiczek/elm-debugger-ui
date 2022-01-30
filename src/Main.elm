@@ -4,6 +4,7 @@ import Browser
 import Data.Binding as Binding exposing (Binding)
 import Data.Breakpoint exposing (Breakpoint)
 import Data.File exposing (File)
+import Data.FileContents as FileContents exposing (FileContents)
 import Data.FileName as FileName
 import Data.FilePath as FilePath exposing (FilePath)
 import Data.StackFrame as StackFrame exposing (StackFrame)
@@ -122,11 +123,11 @@ view model =
             [ Attrs.class "p-2 text-sky-800 bg-sky-400 select-none font-bold uppercase tracking-widest" ]
             [ Html.text "Debugger" ]
         , Html.div
-            [ Attrs.class "flex flex-1 flex-row divide-x divide-slate-300 items-stretch" ]
+            [ Attrs.class "flex flex-1 flex-row divide-x divide-slate-300 items-stretch overflow-hidden" ]
             [ Html.div
                 [ Attrs.class "flex-1 flex flex-col" ]
                 [ tabListView model
-                , codeView "module Main exposing (main, Main(..))"
+                , codeView model
                 ]
             , Html.div
                 [ Attrs.class "w-64 flex flex-col bg-slate-100" ]
@@ -353,12 +354,17 @@ tabListView { openFiles } =
     UX.TabList.view tabs
 
 
-codeView : String -> Html Msg
-codeView code =
+codeView : { r | openFiles : Zipper File } -> Html Msg
+codeView { openFiles } =
+    let
+        file : File
+        file =
+            Zipper.current openFiles
+    in
     Html.div
-        [ Attrs.class "flex flex-1" ]
+        [ Attrs.class "flex flex-1 overflow-hidden" ]
         [ Html.node "x-code"
-            [ Attrs.attribute "code" code
+            [ Attrs.attribute "code" <| FileContents.unwrap file.contents
             , Attrs.class "flex flex-1"
             ]
             []

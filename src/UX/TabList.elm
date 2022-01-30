@@ -50,7 +50,7 @@ tabView tab =
 tabStatusClass : { r | isActive : Bool } -> String
 tabStatusClass { isActive } =
     if isActive then
-        "bg-sky-100"
+        "bg-sky-100 font-semibold"
 
     else
         "bg-slate-100"

@@ -1,8 +1,12 @@
-module Data.FilePath exposing (FilePath, fromString, unwrap)
+module Data.FilePath exposing (Comparable, FilePath, fromString, unwrap)
 
 
 type FilePath
     = FilePath String
+
+
+type alias Comparable =
+    String
 
 
 fromString : String -> FilePath
